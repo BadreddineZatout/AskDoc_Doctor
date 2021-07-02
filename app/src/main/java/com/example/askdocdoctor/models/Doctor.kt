@@ -6,7 +6,7 @@ import java.io.Serializable
 @Entity
 data class Doctor(
     @PrimaryKey
-    val id:Int,
+    val doctorId:Int,
     val name:String, val tel:String, val spec:String, val lat:Double,
     val lng:Double, val exp:Int, val fb:String, val image:String): Serializable {
 }
