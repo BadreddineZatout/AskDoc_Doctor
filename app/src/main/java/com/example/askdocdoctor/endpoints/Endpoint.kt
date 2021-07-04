@@ -12,4 +12,7 @@ interface Endpoint {
 
     @GET("booking/{doctorId}")
     fun getBooking(@Path("doctorId") doctorId:Int):Call<List<Booking>>
+
+    @GET("booking/QR/{qr_code}")
+    fun getBookingQR(@Path("qr_code") qr_code:String):Call<Booking>
 }
