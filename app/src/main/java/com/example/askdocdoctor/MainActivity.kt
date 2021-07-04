@@ -6,10 +6,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.askdoc.models.Doctor
 import com.example.askdoc.models.Patient
 import com.example.askdoc.services.RetrofitService
 import com.example.askdocdoctor.models.Auth
+import com.example.askdocdoctor.services.viewModelD
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,6 +20,9 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val doctor = intent.getSerializableExtra("doctor") as Doctor
+        val vm = ViewModelProvider(this).get(viewModelD::class.java)
+        vm.doctor = doctor
         val pref = getSharedPreferences("Auth", Context.MODE_PRIVATE)
         val connected = pref.getBoolean("connected", false)
         if(connected){
