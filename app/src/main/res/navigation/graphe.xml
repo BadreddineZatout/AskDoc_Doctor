@@ -9,7 +9,11 @@
         android:id="@+id/scannerFragment"
         android:name="com.example.askdocdoctor.ScannerFragment"
         android:label="fragment_scanner"
-        tools:layout="@layout/fragment_scanner" />
+        tools:layout="@layout/fragment_scanner" >
+        <action
+            android:id="@+id/action_scannerFragment_to_bookingFragment"
+            app:destination="@id/bookingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/bookingFragment"
         android:name="com.example.askdocdoctor.BookingFragment"

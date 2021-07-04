@@ -15,7 +15,7 @@ data class Booking (
     val bookingTime: String?,
     val doctorId: String?,
     val CodeQR: String?,
+    val patientName: String?,
     val createdAt: String?,
     val updatedAt: String?
-
     )

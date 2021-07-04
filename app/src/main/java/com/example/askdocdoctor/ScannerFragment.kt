@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_DENIED
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
@@ -49,25 +51,29 @@ class ScannerFragment : Fragment() {
             PackageManager.PERMISSION_DENIED){
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.CAMERA),123)
         }else {
-            startscanning()
-            getBooking(1);
+            Singleton.activity = requireActivity()
+            Singleton.viewModel = ViewModelProviders.of(Singleton.activity as HomeActivity).get(viewModel::class.java)
+            startscanning(Singleton.viewModel )
+
+
         }
 
     }
-
-    private fun  getBooking(i: Int){
-        val call = RetrofitService.endpoint.getBooking(i)
-        call.enqueue(object : Callback<List<Booking>> {
-            override fun onResponse(call: Call<List<Booking>>, response:
-            Response<List<Booking>>) {
+    private fun   getBookingQR(qr_code: String, viewModel: viewModel){
+        val call = RetrofitService.endpoint. getBookingQR(qr_code)
+        call.enqueue(object : Callback<Booking> {
+            override fun onResponse(call: Call<Booking>, response:
+            Response<Booking>) {
 
                 if(response.isSuccessful) {
-                    val list = response.body()
-                    if (list!=null){
-                        for(item in list){
-                            Toast.makeText(requireActivity(), item.bookingDate,Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), response.body().toString(),Toast.LENGTH_SHORT).show()
+                    val reservation: Booking ?= response.body()
 
-                        }
+                    if (reservation!=null){
+                            viewModel.booking= reservation
+                            requireActivity().findNavController(R.id.fragmentContainerView).navigate(R.id.action_scannerFragment_to_bookingFragment)
+
+
                     }
                 } else {
                     Toast.makeText(requireActivity(), "erreur",Toast.LENGTH_SHORT).show()
@@ -75,14 +81,16 @@ class ScannerFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<List<Booking>>, t: Throwable) {
-                Toast.makeText(requireActivity(), "erreur2",Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<Booking>, t: Throwable) {
+                Toast.makeText(requireActivity(), t.message,Toast.LENGTH_SHORT).show()
             }
 
         })
     }
 
-    private fun startscanning() {
+
+
+    private fun startscanning(viewModel: viewModel) {
         val scannerView: CodeScannerView=scanner_view
         codeScanner = CodeScanner(requireActivity(),scannerView)
         codeScanner.camera=CodeScanner.CAMERA_BACK
@@ -94,8 +102,9 @@ class ScannerFragment : Fragment() {
         activity = requireActivity()
         codeScanner.decodeCallback = DecodeCallback {
             activity.runOnUiThread {
-                var viewModel = ViewModelProviders.of(activity as ScannerFragment).get(viewModel::class.java)
-                Toast.makeText(requireActivity(), "Scanner result ${it.text}",Toast.LENGTH_SHORT).show()
+                viewModel.valeur_code=it.text
+                getBookingQR(it.text, Singleton.viewModel )
+                //Toast.makeText(requireActivity(), "Scanner result ${it.text}",Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -122,7 +131,7 @@ class ScannerFragment : Fragment() {
         if (requestCode==123){
             if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(requireActivity(), "start scanning",Toast.LENGTH_SHORT).show()
-                startscanning()
+                startscanning(Singleton.viewModel)
             } else {
                 Toast.makeText(requireActivity(), "Camera permission denied",Toast.LENGTH_SHORT).show()
 
