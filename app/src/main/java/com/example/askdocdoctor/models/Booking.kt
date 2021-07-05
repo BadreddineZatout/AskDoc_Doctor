@@ -12,8 +12,9 @@ data class Booking (
     @PrimaryKey
     val bookingId: Int?,
     val bookingDate: String?,
-    val bookingTime: String?,
-    val doctorId: String?,
+    val bookingHour: Int?,
+    val doctorId: Int?,
+    val patientId: Int?,
     val CodeQR: String?,
     val patientName: String?,
     val createdAt: String?,
