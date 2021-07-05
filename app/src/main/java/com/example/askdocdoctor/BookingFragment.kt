@@ -26,7 +26,7 @@ class BookingFragment : Fragment() {
             textView.text= Singleton.viewModel.booking!!.bookingId.toString()
             textView6.text = Singleton.viewModel.booking!!.patientName
             textView8.text = Singleton.viewModel.booking!!.bookingDate
-            textView10.text = Singleton.viewModel.booking!!.bookingTime
+            textView10.text = Singleton.viewModel.booking!!.bookingHour.toString()
 
         }
     }
