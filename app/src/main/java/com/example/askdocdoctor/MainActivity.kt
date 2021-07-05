@@ -20,9 +20,9 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val doctor = intent.getSerializableExtra("doctor") as Doctor
-        val vm = ViewModelProvider(this).get(viewModelD::class.java)
-        vm.doctor = doctor
+        //val doctor = intent.getSerializableExtra("doctor") as Doctor
+        //val vm = ViewModelProvider(this).get(viewModelD::class.java)
+        //vm.doctor = doctor
         val pref = getSharedPreferences("Auth", Context.MODE_PRIVATE)
         val connected = pref.getBoolean("connected", false)
         if(connected){
